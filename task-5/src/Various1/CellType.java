@@ -5,7 +5,8 @@ public enum CellType {
     OBSTACLE(-1, Color.BLACK),
     ROAD(1, Color.GREEN),
     LAND(2, Color.ORANGE),
-    SAND(3, Color.YELLOW);
+    SAND(3, Color.YELLOW),
+    PATH(0, Color.MAGENTA);
 
     private final int weight;
     private final Color color;

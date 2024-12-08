@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GUI extends JPanel {
     private final CellType[][] map;
@@ -11,6 +13,8 @@ public class GUI extends JPanel {
     private final int cols;
     private Cell startCell;
     private Cell endCell;
+    private List<Cell> path;
+    private Integer pathCost;
 
     public GUI(int rows, int cols) {
         this.rows = rows;
@@ -18,6 +22,8 @@ public class GUI extends JPanel {
         this.map = new CellType[rows][cols];
         this.startCell = null;
         this.endCell = null;
+        this.path = new ArrayList<>();
+        this.pathCost = 0;
 
         resetMap();
 
@@ -55,11 +61,13 @@ public class GUI extends JPanel {
     public void resetMap() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                map[i][j] = CellType.ROAD;
+                map[i][j] = CellType.LAND;
             }
         }
         startCell = null;
         endCell = null;
+        path.clear();
+        pathCost = null;
         repaint();
     }
 
@@ -69,7 +77,7 @@ public class GUI extends JPanel {
             return;
         }
 
-        int pathCost = Dijkstra.dijkstra(map, startCell.x, startCell.y, endCell.x, endCell.y);
+        pathCost = Dijkstra.dijkstra(map, startCell.x, startCell.y, endCell.x, endCell.y, path);
         if (pathCost != -1) {
             JOptionPane.showMessageDialog(this, "Длина минимального пути: " + pathCost);
         } else {
@@ -100,6 +108,12 @@ public class GUI extends JPanel {
             g.setColor(Color.RED);
             g.fillRect(endCell.x * cellSize, endCell.y * cellSize, cellSize, cellSize);
         }
+
+        if (path != null) {
+            g.setColor(Color.RED);
+            for (Cell cell : path) {
+                g.fillRect(cell.x * cellSize, cell.y * cellSize, cellSize, cellSize);
+            }
+        }
     }
 }
-
